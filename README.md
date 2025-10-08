@@ -25,6 +25,24 @@ API para gerenciamento de usuários com arquitetura de microserviços e comunica
 - Cenários válidos e inválidos
 - Mocks de repositórios e serviços
 
+  ## 🛠 Tecnologias Utilizadas
+
+- **Framework**: .NET 8
+- **ORM**: Entity Framework Core com Migrations
+- **Banco de Dados**: SQL Server
+- **Autenticação**: JWT (JSON Web Tokens)
+- **Testes**: xUnit, Moq e FluentAssertions
+- **Documentação**: Swashbuckle.AspNetCore (Swagger)
+- **Segurança**: PBKDF2 para hash de senhas
+- **Logging**: Middleware customizado para Request/Response
+- **Containerização**: Docker com multi-stage build
+- **Monitoramento**: New Relic
+- **Mensageria**: Azure Service Bus com Tópicos e Subscriptions
+- **Processamento Assíncrono**: Azure Functions
+- **Orquestração**: Azure Container Apps
+- **API Gateway**: Azure API Management
+- **CI/CD**: Azure DevOps
+
 ## ⚙️ Pré-requisitos
 
 - .NET 8 SDK
