@@ -63,13 +63,12 @@ API para gerenciamento de usuários com arquitetura de microserviços e comunica
 ## 📁 Estrutura do Projeto
 
 ```
-FCG.Users/
+fcg-users/
 ├── API/                 # Controllers e Middlewares
 ├── Application/         # Serviços, DTOs e Interfaces
 ├── Domain/             # Entidades e Regras de Negócio
 ├── Infrastructure/     # EF, Repositórios, Migrations
 ├── Tests/              # Testes Unitários e de Integração
-└── Documentation/      # Documentação do projeto
 ```
 
 ## ☁️ Infraestrutura Azure
