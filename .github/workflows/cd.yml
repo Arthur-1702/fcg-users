@@ -21,12 +21,12 @@ jobs:
           docker build -t arthur1702/fcgusers:latest .
           docker push arthur1702/fcgusers:latest
 
-      # - name: Set up kubectl
-      #   uses: azure/k8s-set-context@v1
-      #   with:
-      #     method: 'kubeconfig'
-      #     kubeconfig: ${{ secrets.KUBE_CONFIG }}
-      #     version: 1.21.0
+      - name: Set up kubectl
+        uses: azure/k8s-set-context@v1
+        with:
+          method: "kubeconfig"
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          version: 1.21.0
 
       - name: Deploy to AKS
         run: |
