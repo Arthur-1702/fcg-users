@@ -37,6 +37,7 @@ RUN apk add --no-cache krb5-libs libgcc libstdc++
 
 # Define variáveis de ambiente para globalização (brasileiro)
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV TZ=America/Sao_Paulo
 ENV LC_ALL=pt_BR.UTF-8
 ENV LANG=pt_BR.UTF-8
 
