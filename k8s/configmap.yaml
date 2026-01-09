@@ -16,7 +16,3 @@ data:
 
   # ServiceBus Configuration
   ServiceBus__NotificationQueueName: "notifications-queue"
-
-  # Swagger/API Documentation
-  ApiTitle: "fcg-users.API"
-  ApiVersion: "v1"
