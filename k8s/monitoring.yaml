@@ -20,7 +20,7 @@ data:
             regex: fcgusers
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
-            replacement: $1:80
+            replacement: $1:8080
 ---
 apiVersion: apps/v1
 kind: Deployment
