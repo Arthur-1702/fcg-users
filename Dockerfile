@@ -33,6 +33,9 @@ RUN apk add --no-cache icu-libs icu-data-full
 # Instala dependências adicionais para SQL Client
 RUN apk add --no-cache krb5-libs libgcc libstdc++
 
+# Instala suporte a globalização e fuso horário
+RUN apk add --no-cache icu-libs tzdata
+
 # São instaladas apenas as bibliotecas necessárias, mantendo a imagem leve e segura
 
 # Define variáveis de ambiente para globalização (brasileiro)
