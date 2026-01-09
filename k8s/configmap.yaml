@@ -7,24 +7,16 @@ data:
   # Logging Configuration
   Logging__LogLevel__Default: "Information"
   Logging__LogLevel__Microsoft.AspNetCore: "Warning"
-  
+
   # JWT Configuration
   Jwt__Issuer: "fcg-users"
-  
+
   # API Configuration
   AllowedHosts: "*"
-  
-  # ServiceBus Configuration (non-sensitive)
+
+  # ServiceBus Configuration
   ServiceBus__NotificationQueueName: "notifications-queue"
-  
-  # Database Configuration (non-sensitive)
-  ConnectionStrings__FCGUsersDbConnection__Server: "fcg-microservices.database.windows.net,1433"
-  ConnectionStrings__FCGUsersDbConnection__Database: "fcg-users"
-  ConnectionStrings__FCGUsersDbConnection__Encrypt: "True"
-  ConnectionStrings__FCGUsersDbConnection__TrustServerCertificate: "False"
-  ConnectionStrings__FCGUsersDbConnection__MultipleActiveResultSets: "False"
-  ConnectionStrings__FCGUsersDbConnection__Connection_Timeout: "30"
-  
+
   # Swagger/API Documentation
   ApiTitle: "fcg-users.API"
   ApiVersion: "v1"
