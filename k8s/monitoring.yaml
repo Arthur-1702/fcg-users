@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: prometheus
+  name: prometheus-users
   namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: prometheus
+  name: prometheus-users
 rules:
   - apiGroups: [""]
     resources:
@@ -29,20 +29,20 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus
+  name: prometheus-users
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus
+  name: prometheus-users
 subjects:
   - kind: ServiceAccount
-    name: prometheus
+    name: prometheus-users
     namespace: default
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-config
+  name: prometheus-users-config
 data:
   prometheus.yml: |
     global:
@@ -66,7 +66,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus
+  name: prometheus-users
 spec:
   replicas: 1
   selector:
@@ -77,7 +77,7 @@ spec:
       labels:
         app: prometheus
     spec:
-      serviceAccountName: prometheus
+      serviceAccountName: prometheus-users
       containers:
         - name: prometheus
           image: prom/prometheus:latest
@@ -94,17 +94,17 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: prometheus-config
+            name: prometheus-users-config
         - name: data
           emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus-service
+  name: prometheus-users-service
 spec:
   selector:
-    app: prometheus
+    app: prometheus-users
   ports:
     - protocol: TCP
       port: 9090
@@ -114,16 +114,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana
+  name: grafana-users
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      app: grafana-users
   template:
     metadata:
       labels:
-        app: grafana
+        app: grafana-users
     spec:
       containers:
         - name: grafana
@@ -143,10 +143,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana-service
+  name: grafana-users-service
 spec:
   selector:
-    app: grafana
+    app: grafana-users
   ports:
     - protocol: TCP
       port: 3000
