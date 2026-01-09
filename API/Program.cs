@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Prometheus;
 
 #region initializing
 var builder = WebApplication.CreateBuilder(args);
@@ -132,10 +133,16 @@ builder.Services.AddSingleton<IPasswordHasherRepository, PasswordHasherRepositor
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
 
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+
 //repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ILoggerRepository, LoggerRepository>();
 builder.Services.AddScoped<INewRelicLoggerRepository, NewRelicLoggerRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
+// Registra o BackgroundService para iniciar o processamento
+builder.Services.AddHostedService<NotificationProcessorHostedService>();
 
 // Register the DbContext with dependency injection
 builder.Services.AddDbContext<UsersDbContext>(options =>
@@ -193,20 +200,24 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// Configura Monitoramento com Prometheus
+app.UseRouting();
+app.UseHttpMetrics(); // Coleta métricas HTTP automaticamente
+app.MapMetrics(); // Expõe endpoint /metrics
 
-// Middleware que valida autentica��o JWT em cada requisi��o
+// Middleware que valida autenticação JWT em cada requisição
 app.UseAuthentication();
 
-// Middleware que avalia autoriza��es (ex: [Authorize])
+// Middleware que avalia autorizações (ex: [Authorize])
 app.UseAuthorization();
 
-// middleware para log de requisi��es
-app.UseMiddleware<RequestLoggingMiddleware>();
+//// middleware para log de requisições
+//app.UseMiddleware<RequestLoggingMiddleware>();
 
 // middleware para tratamento global de erros
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-//middleware que for�a o redirecionamento autom�tico de requisi��es HTTP para HTTPS
+//middleware que força o redirecionamento automático de requisições HTTP para HTTPS
 app.UseHttpsRedirection();
 
 // Endpoint routing

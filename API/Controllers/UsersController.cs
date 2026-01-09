@@ -1,8 +1,10 @@
 using API.Models;
 using Application.DTO.User;
+using Domain.Entities;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FCG.FiapCloudGames.Controllers
 {
@@ -12,10 +14,12 @@ namespace FCG.FiapCloudGames.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly INotificationService _notificationService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, INotificationService notificationService)
         {
             _userService = userService;
+            _notificationService = notificationService;
         }
 
         #region GETS
@@ -49,6 +53,22 @@ namespace FCG.FiapCloudGames.Controllers
         {
             var game = _userService.GetUserById(id);
             return Ok(game);
+        }
+
+        /// <summary>
+        /// returns all notifications for a user by user id.
+        /// </summary>
+        /// <returns>List of Notifications</returns>
+        [HttpGet("{userId}/notifications")]
+        [ProducesResponseType(typeof(IEnumerable<Notification>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetNotificationsByUserId(string userId)
+        {
+            var notifications = await _notificationService.GetNotificationsByUserIdAsync(userId);
+            return Ok(notifications);
         }
         #endregion
 

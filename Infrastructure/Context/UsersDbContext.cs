@@ -14,6 +14,7 @@ namespace Infrastructure.Context
         public DbSet<User> Users { get; set; }
         public DbSet<RequestLog> RequestLogs { get; set; }
         public DbSet<Trace> Traces { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

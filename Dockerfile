@@ -1,47 +1,46 @@
-# Stage 1 - Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Estágio 1 - Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+# Usa imagem Alpine do SDK .NET 8 para compilação (imagem menor que as padrões)
 
-# Set working directory
 WORKDIR /app
 
-# Copy full solution and project folders
-# This assumes you are building from the root of the repository
 COPY . .
 
-# Restore NuGet packages
+# Restaura pacotes NuGet
 RUN dotnet restore fcg-users.sln
 
-# Build the application in Release mode
-RUN dotnet build fcg-users.sln -c Release --no-restore
+# Compila e publica em um único comando
+RUN dotnet publish API/API.csproj -c Release -o /app/publish \
+    # Eficiente: Evita restauração redundante de pacotes
+    --no-restore \ 
+    # Produz aplicação dependente do runtime (imagem menor)
+    --self-contained false \
+    # Desativa trimming (mantém compatibilidade)
+    /p:PublishTrimmed=false \
+    # Mantém arquivos separados (mais fácil para debugging)
+    /p:PublishSingleFile=false
 
-# Publish the application
-RUN dotnet publish API/API.csproj -c Release -o /app/publish --no-restore
-
-# Stage 2 - Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Estágio 2 - Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
+# Usa imagem Alpine runtime (muito menor que a imagem SDK, ~100MB vs ~500MB)
 
 # Set working directory
 WORKDIR /app
 
-# Install the New Relic agent
-RUN apt-get update && apt-get install -y wget ca-certificates gnupg \
-  && echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list \
-  && wget https://download.newrelic.com/548C16BF.gpg \
-  && apt-key add 548C16BF.gpg \
-  && apt-get update \
-  && apt-get install -y 'newrelic-dotnet-agent' \
-  && rm -rf /var/lib/apt/lists/*
+# Instala bibliotecas ICU para suporte a globalização, necessário para versão Alpine
+RUN apk add --no-cache icu-libs icu-data-full
 
-# Set the environment variables for New Relic
-ENV CORECLR_ENABLE_PROFILING=1 \
-	CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
-	CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent \
-	CORECLR_PROFILER_PATH=/usr/local/newrelic-dotnet-agent/libNewRelicProfiler.so \
-	NEW_RELIC_LICENSE_KEY="19be516e8cacae15feebc61ecbd20987FFFFNRAL" \
-	NEW_RELIC_APP_NAME="fcg-users"
+# Instala dependências adicionais para SQL Client
+RUN apk add --no-cache krb5-libs libgcc libstdc++
 
-# Copy published output from build stage
+# São instaladas apenas as bibliotecas necessárias, mantendo a imagem leve e segura
+
+# Define variáveis de ambiente para globalização (brasileiro)
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV LC_ALL=pt_BR.UTF-8
+ENV LANG=pt_BR.UTF-8
+
+# Multi-stage build copia apenas artefatos finais (reduz tamanho)
 COPY --from=build /app/publish .
 
-# Set the entry point of the application
 ENTRYPOINT ["dotnet", "API.dll"]

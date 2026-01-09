@@ -31,3 +31,11 @@ jobs:
       - name: Deploy to AKS
         run: |
           kubectl apply -f k8/deployment.yaml
+
+      - name: Deploy Service to AKS
+        run: |
+          kubectl apply -f k8/services.yaml
+
+      - name: Deploy Monitoring to AKS
+        run: |
+          kubectl apply -f k8/monitoring.yaml
