@@ -11,7 +11,7 @@ namespace Tests.UnitTests.Application.Helpers
     public class DateTimeHelperTests
     {
         [Theory]
-        [InlineData("E. South America Standard Time")] // São Paulo
+        [InlineData("America/Sao_Paulo")] // São Paulo
         [InlineData("Pacific Standard Time")]          // Los Angeles
         [InlineData("GMT Standard Time")]              // Londres
         public void ConvertUtcToTimeZone_ShouldConvertDateTimeAndKeepCorrectKind(string timeZoneId)
@@ -37,7 +37,7 @@ namespace Tests.UnitTests.Application.Helpers
             var nonUtcDate = new DateTime(2025, 6, 1, 12, 0, 0, DateTimeKind.Local);
 
             // Act
-            Action act = () => DateTimeHelper.ConvertUtcToTimeZone(nonUtcDate, "E. South America Standard Time");
+            Action act = () => DateTimeHelper.ConvertUtcToTimeZone(nonUtcDate, "America/Sao_Paulo");
 
             // Assert
             act.Should().Throw<ArgumentException>()
@@ -46,7 +46,7 @@ namespace Tests.UnitTests.Application.Helpers
         }
 
         [Theory]
-        [InlineData("E. South America Standard Time")] // São Paulo
+        [InlineData("America/Sao_Paulo")] // São Paulo
         [InlineData("Pacific Standard Time")]          // Los Angeles
         [InlineData("GMT Standard Time")]              // Londres
         public void ConvertTimeZoneToUtc_ShouldConvertDateTimeAndReturnUtcKind(string timeZoneId)
