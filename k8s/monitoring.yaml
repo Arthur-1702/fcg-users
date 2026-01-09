@@ -71,11 +71,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      app: prometheus-users
   template:
     metadata:
       labels:
-        app: prometheus
+        app: prometheus-users
     spec:
       serviceAccountName: prometheus-users
       containers:
