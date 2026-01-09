@@ -15,5 +15,8 @@ spec:
       containers:
         - name: fcgusers
           image: arthur1702/fcgusers:latest
+          env:
+            - name: TZ
+              value: "America/Sao_Paulo"
           ports:
             - containerPort: 80
